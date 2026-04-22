@@ -1,0 +1,11 @@
+name: PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  ai-review:
+    uses: ./.github/workflows/ai-code-review.yml
+    secrets:
+      anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
