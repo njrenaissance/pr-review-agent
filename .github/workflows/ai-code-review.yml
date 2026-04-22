@@ -1,0 +1,46 @@
+name: AI Code Review
+
+on:
+  workflow_call:
+    secrets:
+      anthropic-api-key:
+        description: 'Anthropic API key for Claude access'
+        required: true
+    inputs:
+      model:
+        description: 'Claude model to use (e.g., claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5)'
+        type: string
+        required: false
+        default: 'claude-sonnet-4-6'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event.pull_request.draft != true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Run AI Code Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.anthropic-api-key }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODEL_NAME: ${{ inputs.model }}
+        run: |
+          python pr_review_agent.py \
+            "${{ github.repository }}" \
+            "${{ github.event.pull_request.number }}" \
+            --post
