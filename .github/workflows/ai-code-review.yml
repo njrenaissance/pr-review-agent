@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: njrenaissance/pr-review-agent
+          ref: main
           path: reviewer
 
       - name: Set up Python

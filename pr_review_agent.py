@@ -23,7 +23,10 @@ MAX_DIFF_CHARS = 12_000  # Truncate huge diffs to stay within context
 
 # ── Prompt ─────────────────────────────────────────────────────────────────────
 _PROMPT_FILE = Path(__file__).parent / "SYSTEM_PROMPT.md"
-SYSTEM_PROMPT = _PROMPT_FILE.read_text(encoding="utf-8")
+try:
+    SYSTEM_PROMPT = _PROMPT_FILE.read_text(encoding="utf-8")
+except FileNotFoundError:
+    raise FileNotFoundError(f"System prompt file not found: {_PROMPT_FILE.resolve()}")
 
 REVIEW_PROMPT = ChatPromptTemplate.from_messages(
     [
