@@ -43,7 +43,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.anthropic-api-key }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODEL_NAME: ${{ inputs.model }}
-        run: python reviewer/pr_review_agent.py \
+        run: |
+          python reviewer/pr_review_agent.py \
             "${{ github.repository }}" \
             "${{ github.event.pull_request.number }}" \
             --post

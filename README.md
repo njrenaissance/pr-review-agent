@@ -43,10 +43,9 @@ jobs:
    - Create `ANTHROPIC_API_KEY` with your [Anthropic API key](https://console.anthropic.com)
    - `GITHUB_TOKEN` is provided automatically by GitHub Actions
 
-2. **The action runs automatically** on:
+2. **The workflow runs automatically** on:
    - New pull requests
    - Updates to pull requests (new commits)
-   - Manually via `workflow_dispatch` (optional)
 
 3. **The bot posts a review** as a comment on the PR within ~30 seconds
 
@@ -178,6 +177,9 @@ Works with:
 git clone https://github.com/njrenaissance/pr-review-agent
 cd pr-review-agent
 uv sync
+
+# Install dev dependencies (optional)
+uv sync --group dev
 ```
 
 ### Test locally
@@ -191,6 +193,6 @@ python pr_review_agent.py your-org/test-repo 1
 
 PRs welcome! This workflow is designed to be straightforward and easy to customize:
 
-- Modify `REVIEW_PROMPT` in `pr_review_agent.py` to change review style
+- Modify `SYSTEM_PROMPT.md` to change review style
 - Add new output formats or integrations
 - Keep it simple — the value is in the reusability
