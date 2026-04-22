@@ -17,7 +17,7 @@ can run from CLI or as a GitHub Action.
 
 - `pr_review_agent.py` — main application
   (prompt, LangChain chain, GitHub helpers, CLI)
-- `requirements.txt` — Python dependencies
+- `pyproject.toml` — Python dependencies and project configuration
 
 ## Environment variables
 
@@ -29,7 +29,7 @@ can run from CLI or as a GitHub Action.
 ## Running
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 python pr_review_agent.py <owner/repo> <pr_number> [--post] [--output FILE]
 ```
 
