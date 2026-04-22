@@ -17,7 +17,7 @@ load_dotenv()
 # ── Configuration ──────────────────────────────────────────────────────────────
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
-MODEL_NAME = "claude-sonnet-4-6"
+MODEL_NAME = os.environ.get("MODEL_NAME", "claude-sonnet-4-6")
 MAX_DIFF_CHARS = 12_000  # Truncate huge diffs to stay within context
 
 # ── Prompt ─────────────────────────────────────────────────────────────────────
@@ -78,10 +78,20 @@ def build_review_chain():
     return REVIEW_PROMPT | llm | StrOutputParser()
 
 
+# ── Formatting helpers ────────────────────────────────────────────────────────
+def format_review_header(pr_number: int, title: str) -> str:
+    """Format a consistent header for the review output."""
+    line = "═" * 70
+    return f"{line}\n  PR #{pr_number}: {title}\n{line}"
+
+
 # ── GitHub helpers ─────────────────────────────────────────────────────────────
 def fetch_pr_data(repo_name: str, pr_number: int) -> dict:
     """Fetch PR metadata and diff from GitHub."""
-    g = Github(auth=Auth.Token(GITHUB_TOKEN))
+    if GITHUB_TOKEN:
+        g = Github(auth=Auth.Token(GITHUB_TOKEN))
+    else:
+        g = Github()
     try:
         repo = g.get_repo(repo_name)
         pr = repo.get_pull(pr_number)
@@ -145,9 +155,7 @@ def review_pr(
         }
     )
 
-    print("\n" + "═" * 70)
-    print(f"  PR #{pr_number}: {pr_data['title']}")
-    print("═" * 70)
+    print("\n" + format_review_header(pr_number, pr_data['title']))
     print(review)
     print("═" * 70 + "\n")
 
@@ -177,8 +185,6 @@ if __name__ == "__main__":
 
     if not ANTHROPIC_API_KEY:
         sys.exit("❌  Set ANTHROPIC_API_KEY environment variable.")
-    if not GITHUB_TOKEN:
-        sys.exit("❌  Set GITHUB_TOKEN environment variable.")
 
     review_pr(
         args.repo, args.pr_number, post_comment=args.post, output_file=args.output
