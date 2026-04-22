@@ -3,10 +3,17 @@ name = "pr-review-agent"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "langchain>=0.3.0",
     "langchain-anthropic>=0.3.0",
     "pygithub>=2.3.0",
     "python-dotenv>=0.19.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
 ]

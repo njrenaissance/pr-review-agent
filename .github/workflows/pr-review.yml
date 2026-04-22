@@ -9,3 +9,5 @@ jobs:
     uses: ./.github/workflows/ai-code-review.yml
     secrets:
       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+    with:
+      model: claude-sonnet-4-6
